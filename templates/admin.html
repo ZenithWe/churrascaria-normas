@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Painel administrativo | Norma's{% endblock %}
+{% block body %}
+<header class="admin-top"><div class="shell"><div><b>Norma's</b><span>Painel administrativo</span></div><nav><a href="{{ url_for('index') }}" target="_blank">Ver site</a><a href="{{ url_for('logout') }}">Sair</a></nav></div></header>
+<main class="admin-page shell">
+  <section class="admin-heading"><div><p class="eyebrow dark">Operação</p><h1>Reservas e contatos</h1></div><div class="admin-summary"><span><b>{{ reservations|length }}</b> reservas</span><span><b>{{ contacts|length }}</b> mensagens</span></div></section>
+
+  <section class="admin-section">
+    <h2>Reservas</h2>
+    {% if reservations %}
+    <div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Data</th><th>Pessoas</th><th>Observações</th><th>Status</th></tr></thead><tbody>
+      {% for r in reservations %}
+      <tr><td><b>{{ r['name'] }}</b><small>{{ r['phone'] }}</small></td><td>{{ r['date'] }}<small>{{ r['time'] }}</small></td><td>{{ r['people'] }}</td><td>{{ r['notes'] or '—' }}</td><td>
+        <form method="post" action="{{ url_for('reservation_status', reservation_id=r['id']) }}">
+          <select name="status" class="status-select status-{{ r['status']|lower }}" onchange="this.form.submit()">
+            {% for s in ['Pendente','Confirmada','Cancelada'] %}<option value="{{ s }}" {% if r['status']==s %}selected{% endif %}>{{ s }}</option>{% endfor %}
+          </select>
+        </form>
+      </td></tr>
+      {% endfor %}
+    </tbody></table></div>
+    {% else %}<div class="empty-state">Nenhuma reserva recebida ainda.</div>{% endif %}
+  </section>
+
+  <section class="admin-section">
+    <h2>Mensagens</h2>
+    {% if contacts %}
+    <div class="message-list">{% for c in contacts %}<article><div><b>{{ c['name'] }}</b><span>{{ c['contact'] }}</span></div><p>{{ c['message'] }}</p><small>{{ c['created_at']|replace('T',' ') }}</small></article>{% endfor %}</div>
+    {% else %}<div class="empty-state">Nenhuma mensagem recebida ainda.</div>{% endif %}
+  </section>
+</main>
+{% endblock %}

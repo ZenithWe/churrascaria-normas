@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Login administrativo | Norma's{% endblock %}
+{% block body %}
+<main class="login-page">
+  <form class="login-card" method="post">
+    <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">N</span><span><b>NORMA'S</b><small>Administração</small></span></a>
+    <h1>Entrar no painel</h1>
+    <p>Use a senha definida na variável <code>ADMIN_PASSWORD</code>.</p>
+    {% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}{% endwith %}
+    <div class="field"><label for="password">Senha</label><input id="password" name="password" type="password" required autofocus></div>
+    <button class="btn btn-dark full" type="submit">Entrar</button>
+    <a class="back-link" href="{{ url_for('index') }}">← Voltar ao site</a>
+  </form>
+</main>
+{% endblock %}
